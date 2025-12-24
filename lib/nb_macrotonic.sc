@@ -1,6 +1,6 @@
-// nb_supertonic v0.1 @sonoCircuit - based on supertonic @infinitedigits
+// nb_macrotonic v0.1 @sonoCircuit - based on supertonic @infinitedigits
 
-NB_supertonic {
+NB_macrotonic {
 
 	*initClass {
 
@@ -44,7 +44,7 @@ NB_supertonic {
 			voxs = Array.newClear(numVoices);
 			nozBuf = Buffer.loadCollection(Server.default, FloatArray.fill(288000, { if(2.rand > 0) {1.0} {-1.0} }));
 
-			SynthDef(\nb_superT,{
+			SynthDef(\nb_macroT,{
 				arg outBus, sendABus, sendBBus, nBuf,
 				vel = 0.5, mainAmp = 1, level = 1, pan = 0, sendA = 0, sendB = 0, distAmt = 0.2, eQFreq = 632.4, eQGain = -20, mix = 0.8,
 				oscWave = 0, oscFreq = 54, modMode = 0, modRate = 400, modAmt = 18, oscAtk = 0, oscDcy = 0.500,
@@ -140,7 +140,7 @@ NB_supertonic {
 					voxs[idx].free;
 				};
 
-				syn = Synth.new(\nb_superT,
+				syn = Synth.new(\nb_macroT,
 					[
 						\vel, vel,
 						\nBuf, nozBuf,
@@ -157,35 +157,35 @@ NB_supertonic {
 
 				voxs.put(idx, syn);
 
-			}, "/nb_supertonic/trig");
+			}, "/nb_macrotonic/trig");
 
 			OSCFunc.new({ |msg|
 				var idx = msg[1].asInteger;
 				var key = msg[2].asSymbol;
 				var val = msg[3].asFloat;
 				voxParams[idx][key] = val;
-			}, "/nb_supertonic/set_param");
+			}, "/nb_macrotonic/set_param");
 
 			OSCFunc.new({ |msg|
 				var val = msg[1].asFloat;
 				numVoices.do{ |idx|
 					voxParams[idx][\mainAmp] = val
 				};
-			}, "/nb_supertonic/set_main_amp");
+			}, "/nb_macrotonic/set_main_amp");
 
 			OSCFunc.new({ |msg|
 				var val = msg[1].asFloat;
 				numVoices.do{ |idx|
 					voxParams[idx][\lpf_hz] = val
 				};
-			}, "/nb_supertonic/set_cutoff");
+			}, "/nb_macrotonic/set_cutoff");
 
 			OSCFunc.new({ |msg|
 				var val = msg[1].asFloat;
 				numVoices.do{ |idx|
 					voxParams[idx][\lpf_rz] = val
 				};
-			}, "/nb_supertonic/set_resonance");
+			}, "/nb_macrotonic/set_resonance");
 
 		};
 	}
