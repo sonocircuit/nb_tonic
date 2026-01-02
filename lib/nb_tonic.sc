@@ -1,6 +1,6 @@
-// nb_supertonic v0.1 @sonoCircuit - based on supertonic @infinitedigits
+// nb_tonic v0.1 @sonoCircuit - based on supertonic @infinitedigits
 
-NB_supertonic {
+NB_tonic {
 
 	*initClass {
 
@@ -157,35 +157,35 @@ NB_supertonic {
 
 				voxs.put(idx, syn);
 
-			}, "/nb_supertonic/trig");
+			}, "/nb_tonic/trig");
 
 			OSCFunc.new({ |msg|
 				var idx = msg[1].asInteger;
 				var key = msg[2].asSymbol;
 				var val = msg[3].asFloat;
 				voxParams[idx][key] = val;
-			}, "/nb_supertonic/set_param");
+			}, "/nb_tonic/set_param");
 
 			OSCFunc.new({ |msg|
 				var val = msg[1].asFloat;
 				numVoices.do{ |idx|
 					voxParams[idx][\mainAmp] = val
 				};
-			}, "/nb_supertonic/set_main_amp");
+			}, "/nb_tonic/set_main_amp");
 
 			OSCFunc.new({ |msg|
 				var val = msg[1].asFloat;
 				numVoices.do{ |idx|
 					voxParams[idx][\lpf_hz] = val
 				};
-			}, "/nb_supertonic/set_cutoff");
+			}, "/nb_tonic/set_cutoff");
 
 			OSCFunc.new({ |msg|
 				var val = msg[1].asFloat;
 				numVoices.do{ |idx|
 					voxParams[idx][\lpf_rz] = val
 				};
-			}, "/nb_supertonic/set_resonance");
+			}, "/nb_tonic/set_resonance");
 
 		};
 	}
