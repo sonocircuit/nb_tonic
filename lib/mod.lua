@@ -9,7 +9,7 @@ local NUM_VOICES = 6
 
 local kit_path = "/home/we/dust/data/nb_tonic/tonic_kits"
 local vox_path = "/home/we/dust/data/nb_tonic/tonic_voxs"
-local default_kit = "/home/we/dust/data/nb_tonic/tonic_kits/default.stkit"
+local default_kit = "/home/we/dust/data/nb_tonic/tonic_kits/default.tkit"
 
 local selected_voice = 1
 local base_note = 0
@@ -107,7 +107,7 @@ local function save_kit(txt)
         table.insert(kit[v], params:get("nb_tonic_"..v.."_"..n))
       end
     end
-    tab.save(kit, kit_path.."/"..txt..".stkit")
+    tab.save(kit, kit_path.."/"..txt..".tkit")
     current_kit = txt
     print("saved tonic kit: "..txt)
   end
@@ -115,7 +115,7 @@ end
 
 local function load_kit(path)
   if path ~= "cancel" and path ~= "" then
-    if path:match("^.+(%..+)$") == ".stkit" then
+    if path:match("^.+(%..+)$") == ".tkit" then
       local kit = tab.load(path)
       if kit ~= nil then
         for i, v in ipairs(voice_params) do
@@ -125,13 +125,13 @@ local function load_kit(path)
             end
           end
         end
-        current_kit = path:match("[^/]*$"):gsub(".stkit", "")
+        current_kit = path:match("[^/]*$"):gsub(".tkit", "")
         print("loaded tonic kit: "..current_kit)
       else
-        print("error: could not find kit", path)
+        print("error: could not find tonic kit", path)
       end
     else
-      print("error: not a kit file")
+      print("error: not a tonic kit file")
     end
   end
 end
@@ -142,14 +142,14 @@ local function save_voice(txt)
     for _, v in ipairs(voice_params) do
       t[v] = params:get("nb_tonic_"..v.."_"..selected_voice)
     end
-    tab.save(t, vox_path.."/"..txt..".stvox")
-    print("saved drmfm voice: "..txt)
+    tab.save(t, vox_path.."/"..txt..".tvox")
+    print("saved tonic vox: "..txt)
   end
 end
 
 local function load_voice(path)
   if path ~= "cancel" and path ~= "" then
-    if path:match("^.+(%..+)$") == ".stvox" then
+    if path:match("^.+(%..+)$") == ".tvox" then
       local t = tab.load(path)
       if t ~= nil then
         for _, v in ipairs(voice_params) do
@@ -157,13 +157,13 @@ local function load_voice(path)
             params:set("nb_tonic_"..v.."_"..selected_voice, t[v])
           end
         end
-        current_vox[selected_voice] = path:match("[^/]*$"):gsub(".stvox", "")
+        current_vox[selected_voice] = path:match("[^/]*$"):gsub(".tvox", "")
         print("loaded tonic vox: "..current_vox[selected_voice])
       else
-        print("error: could not find vox", path)
+        print("error: could not find tonic vox", path)
       end
     else
-      print("error: not a vox file")
+      print("error: not a tonic vox file")
     end
   end
 end
@@ -365,8 +365,8 @@ local function post_system()
   if util.file_exists(kit_path) == false then
     util.make_dir(kit_path)
     util.make_dir(vox_path)
-    os.execute('cp '.. '/home/we/dust/code/nb_tonic/data/tonic_kits/*.stkit '.. kit_path)
-    os.execute('cp '.. '/home/we/dust/code/nb_tonic/data/tonic_voxs/*.stvox '.. vox_path)
+    os.execute('cp '.. '/home/we/dust/code/nb_tonic/data/tonic_kits/*.tkit '.. kit_path)
+    os.execute('cp '.. '/home/we/dust/code/nb_tonic/data/tonic_voxs/*.tvox '.. vox_path)
   end
 end
 
