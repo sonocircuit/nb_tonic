@@ -5,11 +5,11 @@ local tx = require 'textentry'
 local mu = require 'musicutil'
 local md = require 'core/mods'
 
-local NUM_VOICES = 6
-
 local kit_path = "/home/we/dust/data/nb_tonic/tonic_kits"
 local vox_path = "/home/we/dust/data/nb_tonic/tonic_voxs"
 local default_kit = "/home/we/dust/data/nb_tonic/tonic_kits/default.tkit"
+
+local NUM_VOICES = 6
 
 local selected_voice = 1
 local base_note = 0
@@ -28,6 +28,10 @@ local voice_params = {
 
 
 ---------------- osc msgs ----------------
+
+local function init_nb_tonic()
+  osc.send({'localhost', 57120}, '/nb_tonic/init')
+end
 
 local function trig_tonic(note, vel)
   local vox = (note - base_note) % NUM_VOICES
@@ -296,6 +300,8 @@ local function add_params()
     params:add_control("nb_tonic_noise_vel_"..i, "noise velocity", controlspec.new(0, 1, "lin", 0, 1), function(param) return round_form(param:get() * 100, 1, "%") end)
     params:set_action("nb_tonic_noise_vel_"..i, function(val) set_param(i, 'nVel', val)  end)
   end
+  -- load default kit after params
+  load_kit(default_kit)
 end
 
 ---------------- nb player ----------------
@@ -371,6 +377,7 @@ local function post_system()
 end
 
 local function pre_init()
+  init_nb_tonic()
   add_nb_tonic_player()
 end
 
