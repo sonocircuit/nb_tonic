@@ -1,4 +1,4 @@
-// nb_tonic v0.2 @sonoCircuit - based on supertonic @infinitedigits
+// nb_tonic v1.0 @sonoCircuit - based on supertonic @infinitedigits
 
 NB_tonic {
 
@@ -49,7 +49,7 @@ NB_tonic {
 
 				if (tonicGroup.isNil) {
 
-					tonicGroup = ParGroup.new(s);
+					tonicGroup = Group.new(s);
 
 					nozBuf = Buffer.loadCollection(s, FloatArray.fill(96000, { if(2.rand > 0) {1.0} {-1.0} }));
 
@@ -59,11 +59,11 @@ NB_tonic {
 						oscWave = 0, oscFreq = 54, modMode = 0, modRate = 400, modAmt = 18, oscAtk = 0, oscDcy = 0.500,
 						nFilFrq = 1000, nFilQ = 2.5, nFilMod = 0, nEnvMod = 0, nStereo = 1, nEnvAtk = 0.026, nEnvDcy = 0.200,
 						oscVel = 1, nVel = 1, modVel = 1, lpf_hz = 20000, lpf_rz = 1;
-
+						
 						// variables
 						var osc, noz, nozPostF, snd, pitchMod, numClaps, dAction, wn1, wn2,
 						clapFreq, decayer, envO, envX, envL, envD, boost, att, lpf_q;
-
+						
 						// rescale and clamp
 						vel = vel.linlin(0, 1, 0, 2);
 						eQFreq = eQFreq.clip(20, 20000);
@@ -71,7 +71,7 @@ NB_tonic {
 						lpf_q = lpf_rz.linlin(0, 1, 1, 0.05);
 						clapFreq = (4311 / (nEnvAtk + 28.4)) + 11.44;
 						decayer = SelectX.kr(distAmt, [0.05, distAmt * 0.3]);
-
+						
 						// envelopes
 						dAction = Select.kr(((oscAtk + oscDcy) > (nEnvAtk + nEnvDcy)), [0, 2]);
 						envO = EnvGen.ar(Env.new([0.0001, 1, 0.9, 0.0001], [oscAtk, oscDcy * decayer, oscDcy], \exponential), doneAction: dAction);
@@ -80,20 +80,20 @@ NB_tonic {
 						envD = Decay.ar(Impulse.ar(clapFreq), clapFreq.reciprocal, 0.85, 0.15) * Trig.ar(1, nEnvAtk + 0.001) + EnvGen.ar(
 							Env.new([0.001, 0.001, 1, 0.0001], [nEnvAtk,0.001, nEnvDcy], \exponential)
 						);
-
+						
 						// pitch modulation
 						pitchMod = Select.ar(modMode, [
 							Decay.ar(Impulse.ar(0.0001), (2 * modRate).reciprocal), // decay
 							SinOsc.ar(modRate, pi), // sine
 							LFNoise0.ar(4 * modRate).lag((4 * modRate).reciprocal) // random
 						]);
-						pitchMod = pitchMod * modAmt * modVel * vel;
+						pitchMod = pitchMod * modAmt * vel.range(1 - modVel, 1);
 						oscFreq = ((oscFreq).cpsmidi + pitchMod).midicps;
-
+						
 						// noise playback
 						wn1 = PlayBuf.ar(1, nBuf, startPos: IRand.new(0, 96000), loop: 1);
 						wn2 = PlayBuf.ar(1, nBuf, startPos: IRand.new(0, 96000), loop: 1);
-
+						
 						// oscillator
 						osc = Select.ar(oscWave, [
 							SinOsc.ar(oscFreq),
@@ -101,8 +101,8 @@ NB_tonic {
 							SawDPW.ar(oscFreq) * 0.5,
 						]);
 						osc = Select.ar(modMode > 1, [osc, SelectX.ar(oscDcy < 0.1, [LPF.ar(wn2, modRate), osc])]) * envO;
-						osc = (osc * oscVel * vel).softclip;
-
+						osc = (osc * vel.range(1 - oscVel, 1)).softclip;
+						
 						// noise source
 						noz = Select.ar(nStereo, [wn1, [wn1, wn2]]);
 						// noise filter
@@ -116,8 +116,8 @@ NB_tonic {
 						nozPostF = SelectX.ar((0.1092 * nFilQ.log + 0.0343), [nozPostF, SinOsc.ar(nFilFrq)]);
 						// noise env & vel
 						noz = Splay.ar(nozPostF * Select.ar(nEnvMod, [envX, envL, envD]));
-						noz = (noz * nVel * vel).softclip * -6.dbamp;
-
+						noz = (noz * vel.range(1 - nVel, 1)).softclip * -9.dbamp;
+						
 						// mix oscillator and noise
 						snd = XFade2.ar(osc, noz, mix);
 						// distortion
@@ -128,7 +128,7 @@ NB_tonic {
 						// remove sub freq
 						snd = HPF.ar(snd, 20);
 						// final level
-						snd = snd * level * mainAmp * -9.dbamp;
+						snd = snd * level * mainAmp * -6.dbamp;
 						// lowpass
 						snd = RLPF.ar(snd, lpf_hz, lpf_q);
 						// pan
