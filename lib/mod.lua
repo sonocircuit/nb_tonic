@@ -320,7 +320,7 @@ function add_nb_tonic_player()
   function player:active()
     if self.name ~= nil then
       params:show("nb_tonic_group")
-      _menu.rebuild_params()
+      build_menu()
     end
   end
 
