@@ -1,4 +1,4 @@
--- nb_tonic v0.1 @sonoCircuit - based on supertonic @infinitedigits (thx zack!)
+-- nb_tonic v1.0 @sonoCircuit - based on supertonic @infinitedigits (thx zack!)
 
 local fs = require 'fileselect'
 local tx = require 'textentry'
