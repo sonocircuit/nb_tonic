@@ -108,7 +108,7 @@ local function save_kit(txt)
     for _, v in ipairs(voice_params) do
       kit[v] = {}
       for n = 1, NUM_VOICES do
-        table.insert(kit[v], params:get("nb_tonic_"..v.."_"..n))
+        kit[v][n] = params:get("nb_tonic_"..v.."_"..n)
       end
     end
     tab.save(kit, kit_path.."/"..txt..".tkit")
