@@ -122,7 +122,7 @@ local function load_kit(path)
     if path:match("^.+(%..+)$") == ".tkit" then
       local kit = tab.load(path)
       if kit ~= nil then
-        for i, v in ipairs(voice_params) do
+        for _, v in ipairs(voice_params) do
           if kit[v] ~= nil then
             for n = 1, NUM_VOICES do
               params:set("nb_tonic_"..v.."_"..n, kit[v][n])
