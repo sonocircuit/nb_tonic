@@ -208,11 +208,11 @@ local function add_params()
   params:add_binary("nb_tonic_trig", "trig voice >>")
   params:set_action("nb_tonic_trig", function() trig_tonic(selected_voice - 1, 1) end)
 
-  params:add_trigger("nb_tonic_save_voice", "> load voice")
-  params:set_action("nb_tonic_save_voice", function() fs.enter(vox_path, function(path) load_voice(path) end) end)
+  params:add_trigger("nb_tonic_load_voice", "> load voice")
+  params:set_action("nb_tonic_load_voice", function() fs.enter(vox_path, function(path) load_voice(path) end) end)
 
-  params:add_trigger("nb_tonic_load_voice", "< save voice")
-  params:set_action("nb_tonic_load_voice", function() tx.enter(save_voice, current_vox[selected_voice]) end)
+  params:add_trigger("nb_tonic_save_voice", "< save voice")
+  params:set_action("nb_tonic_save_voice", function() tx.enter(save_voice, current_vox[selected_voice]) end)
   
   params:add_separator("nb_tonic_level_params", "levels")
   for i = 1, NUM_VOICES do
