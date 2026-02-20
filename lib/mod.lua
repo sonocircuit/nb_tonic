@@ -33,8 +33,7 @@ local function init_nb_tonic()
   osc.send({'localhost', 57120}, '/nb_tonic/init')
 end
 
-local function trig_tonic(note, vel)
-  local vox = (note - base_note) % NUM_VOICES
+local function trig_tonic(vox, vel)
   osc.send({'localhost', 57120}, '/nb_tonic/trig', {vox, vel})
 end
 
@@ -347,7 +346,8 @@ function add_nb_tonic_player()
   end
 
   function player:note_on(note, vel)
-    trig_tonic(note, vel)
+    local vox = (note - base_note) % NUM_VOICES
+    trig_tonic(vox, vel)
   end
 
   function player:note_off(note)
