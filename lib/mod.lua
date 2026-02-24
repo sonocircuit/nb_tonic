@@ -255,7 +255,7 @@ local function add_params()
     params:set_action("nb_tonic_mod_amt_"..i, function(val) set_param(i, 'modAmt', val * 0.5)  end)
 
     params:add_control("nb_tonic_mod_rate_"..i, "mod rate", controlspec.new(0.1, 20000, "exp", 0, 17), function(param) return round_form(param:get(), 0.1, "hz") end)
-    params:set_action("nb_tonic_mod_rate_"..i, function(val) set_param(i, 'eQFreq', val) end)
+    params:set_action("nb_tonic_mod_rate_"..i, function(val) set_param(i, 'modRate', val) end)
 
     params:add_control("nb_tonic_osc_attack_"..i, "attack", controlspec.new(0, 10, "lin", 0, 0, "", 1/1000), function(param) return round_form(param:get() * 1000, 1, "ms") end)
     params:set_action("nb_tonic_osc_attack_"..i, function(val) set_param(i, 'oscAtk', val) end)
